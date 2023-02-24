@@ -8,6 +8,20 @@ if (UNIX)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
 endif ()
 
+set(Boost_USE_STATIC_LIBS   ON)
+add_definitions(-DBOOST_STACKTRACE_GNU_SOURCE_NOT_REQUIRED -DBOOST_STACKTRACE_USE_ADDR2LINE)
+
 SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -static")
 
+include_directories(
+        /opt/include
+)
+
+link_directories(
+        /opt/lib
+)
+
+find_package(Boost 1.74 REQUIRED COMPONENTS system filesystem thread log log_setup REQUIRED)
+
 add_executable(crosstool_ng main.cpp)
+target_link_libraries(crosstool_ng fmt boost_system)

@@ -1,0 +1,22 @@
+FROM darvik80/crosstool-ng:latest AS crosstool-ng
+
+ARG TARGET=armv7-rpi2
+
+WORKDIR /home/builder/crosstool-ng
+
+RUN ./ct-ng ${TARGET}-linux-gnueabihf
+RUN ./ct-ng build
+
+FROM darvik80/crosstool-base:latest
+
+ARG TARGET=armv7-rpi2
+
+WORKDIR /home/builder
+COPY --from=crosstool-ng /home/builder/x-tools/${TARGET}-linux-gnueabihf /usr/local
+
+USER builder
+ENV PATH="/usr/local/bin:$PATH"
+ENV CC="/usr/local/bin/${TARGET}-linux-gnueabihf-gcc"
+ENV CXX="/usr/local/bin/${TARGET}-linux-gnueabihf-g++"
+
+ENTRYPOINT ["/bin/bash", "--"]
