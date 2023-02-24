@@ -21,7 +21,5 @@ link_directories(
         /opt/lib
 )
 
-find_package(Boost 1.74 REQUIRED COMPONENTS system filesystem thread log log_setup REQUIRED)
-
 add_executable(crosstool_ng main.cpp)
 target_link_libraries(crosstool_ng fmt boost_system)
